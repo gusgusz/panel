@@ -1,0 +1,90 @@
+.badge-outline-case-PENDING {
+  background: unset;
+  border: 1px solid #f89212;
+  color: #f89212;
+}
+.badge-case-PENDING {
+  background: #f89212;
+  border: 1px solid #f89212;
+  color: #ffffff;
+}
+
+.badge-outline-case-REFUSED {
+  background: unset;
+  border: 1px solid #c80907;
+  color: #c80907;
+}
+.badge-case-REFUSED {
+  background: #c80907;
+  border: 1px solid #c80907;
+  color: #ffffff;
+}
+
+.badge-outline-case-ACCEPTED {
+  background: unset;
+  border: 1px solid #2075a8;
+  color: #2075a8;
+}
+.badge-case-ACCEPTED {
+  background: #2075a8;
+  border: 1px solid #2075a8;
+  color: #ffffff;
+}
+
+.text-case-PENDING {
+  color: #f89212;
+}
+
+.text-case-REFUSED {
+  color: #c80907;
+}
+
+.text-case-ACCEPTED {
+  color: #2075a8;
+}
+
+/******/
+
+.badge-outline-case-type-CONCILIATION {
+  background: unset;
+  border: 1px solid #12aff8;
+  color: #12aff8;
+}
+.badge-case-type-CONCILIATION {
+  background: #12aff8;
+  border: 1px solid #12aff8;
+  color: #ffffff;
+}
+
+.badge-outline-case-type-MEDIATION-ONLINE {
+  background: unset;
+  border: 1px solid #659b00;
+  color: #659b00;
+}
+.badge-case-type-MEDIATION-ONLINE {
+  background: #659b00;
+  border: 1px solid #659b00;
+  color: #ffffff;
+}
+
+.badge-outline-case-type-MEDIATION-OFFILINE {
+  background: unset;
+  border: 1px solid #010324;
+  color: #010324;
+}
+.badge-case-type-MEDIATION-OFFILINE {
+  background: #010324;
+  border: 1px solid #010324;
+  color: #ffffff;
+}
+
+.badge-outline-case-type-ARBITRATION {
+  background: unset;
+  border: 1px solid #d3cf03;
+  color: #d3cf03;
+}
+.badge-case-type-ARBITRATION {
+  background: #d3cf03;
+  border: 1px solid #d3cf03;
+  color: #ffffff;
+}

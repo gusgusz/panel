@@ -1,0 +1,124 @@
+/* inspired by: https://css-tricks.com/responsive-data-tables/ */
+.responsiveTable {
+  width: 100%;
+}
+
+.responsiveTable td .tdBefore {
+  display: none;
+}
+
+.responsiveTable thead tr th {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 60em) {
+  /*
+    Force table elements to not behave like tables anymore
+    Hide table headers (but not display: none;, for accessibility)
+  */
+
+  .responsiveTable table,
+  .responsiveTable thead,
+  .responsiveTable tbody,
+  .responsiveTable th,
+  .responsiveTable td,
+  .responsiveTable tr {
+    display: block;
+  }
+
+  .responsiveTable thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    border-bottom: 2px solid #333;
+  }
+
+  .responsiveTable tbody tr {
+    border: 1px solid #000;
+    padding: 0.25em;
+  }
+
+  .responsiveTable td.pivoted {
+    /* Behave like a "row" */
+    border: none !important;
+    position: relative;
+    padding-left: calc(50% + 10px) !important;
+    text-align: left !important;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .responsiveTable td .tdBefore {
+    /* Now like a table header */
+    position: absolute;
+    display: block;
+
+    /* Top/left values mimic padding */
+    left: 1rem;
+    width: calc(50% - 20px);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    text-align: left !important;
+    font-weight: 600;
+  }
+
+  .responsiveTable tbody tr {
+    border: 1px solid #eee !important;
+    padding-top: 0.25em !important;
+    padding-bottom: 0.25em !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    border-radius: 6px !important;
+  }
+  .responsiveTable td .tdBefore {
+    position: absolute;
+    display: block;
+    left: 5px;
+    width: 80px !important;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    text-align: left !important;
+    font-weight: 600;
+  }
+  .responsiveTable td.pivoted {
+    border: none !important;
+    position: relative;
+    padding-left: 105px !important;
+    text-align: left !important;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .responsiveTable .actions {
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+}
+
+.responsiveTable tr {
+  transition: all 0.4s ease-in-out;
+}
+.responsiveTable th,
+.responsiveTable td {
+  padding: 10px;
+  font-size: 12px;
+
+  min-height: 60px;
+}
+
+.responsiveTable tbody tr:hover {
+  background-color: #eee;
+}
+
+.responsiveTable tbody tr:nth-child(odd) {
+  background-color: rgba(238, 238, 238, 0.712);
+}
+.responsiveTable {
+  max-width: 100%;
+}
+
+.highlighter {
+  padding: 5px !important;
+  border-radius: 2px !important;
+  line-height: 8px !important;
+}

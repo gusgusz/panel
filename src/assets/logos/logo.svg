@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 829.94 242.29">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: 0em;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #1d8b71;
+      }
+
+      .cls-3 {
+        fill: #f15a24;
+      }
+
+      .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6, .cls-7 {
+        fill: gray;
+      }
+
+      .cls-7 {
+        font-size: 41.32px;
+      }
+
+      .cls-7, .cls-8 {
+        font-family: Ubuntu, Ubuntu;
+      }
+
+      .cls-8 {
+        font-size: 184.08px;
+      }
+    </style>
+  </defs>
+  <g id="Camada_1-2" data-name="Camada 1">
+    <g>
+      <path class="cls-2" d="M214.32,48.73l.06,48.98c0,45.78-37.11,82.89-82.89,82.89S48.59,143.49,48.59,97.71v-3.93c0-26.84-21.76-48.59-48.59-48.59v52.53c0,72.62,58.87,131.49,131.49,131.49s131.49-58.87,131.49-131.49V0c-26.9,0-48.7,21.83-48.66,48.73Z"/>
+      <g>
+        <path class="cls-3" d="M93.96,39.39c-19.35,11.96-32.25,33.37-32.25,57.79,0,37.5,30.4,67.89,67.89,67.89s67.89-30.4,67.89-67.89c0-24.42-12.9-45.83-32.25-57.79-11.32,1.74-23.27,2.67-35.65,2.67s-24.33-.93-35.65-2.67Zm86.06,57.79c0,27.8-22.62,50.42-50.42,50.42s-50.42-22.62-50.42-50.42,22.62-50.42,50.42-50.42,50.42,22.62,50.42,50.42Z"/>
+        <path class="cls-6" d="M104.11,32.04c-3.47,1.04-3.11,2.89,.66,3.8,6.99,1.69,15.57,2.68,24.84,2.68s17.85-.99,24.84-2.68c3.77-.91,4.13-2.76,.66-3.8-6.78-2.03-15.72-3.27-25.5-3.27s-18.72,1.24-25.5,3.27Z"/>
+      </g>
+      <text class="cls-8" transform="translate(275.69 184.83)"><tspan class="cls-3" x="0" y="0">on</tspan><tspan class="cls-1" x="214.27" y="0">side</tspan></text>
+      <text class="cls-7" transform="translate(629.29 234.48)"><tspan class="cls-4" x="0" y="0">t</tspan><tspan class="cls-5" x="16.2" y="0">ecnologia</tspan></text>
+    </g>
+  </g>
+</svg>

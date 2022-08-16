@@ -1,0 +1,165 @@
+.badge {
+  border: 1px solid transparent;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700");
+@import "./_01_mixins.scss";
+@import "./_02_variables";
+@import "./_03_core.scss";
+@import "./_04_plugins.scss";
+@import "./_05_views.scss";
+
+/** your custom css code **/
+/*
+html {
+    background-color: $theme-color-1 !important;
+}
+*/
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-width: 2px;
+}
+
+.btn-outline-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-width: 0px;
+}
+
+.badge-outline-NFE {
+  background: unset;
+  border: 1px solid #f89212;
+  color: #f89212;
+}
+.badge-outline-NFSE {
+  background: unset;
+  border: 1px solid #2075a8;
+  color: #2075a8;
+}
+.badge-outline-CTE {
+  background: unset;
+  border: 1px solid #c80907;
+  color: #c80907;
+}
+.badge-outline-CTEOS {
+  background: unset;
+  border: 1px solid #862812;
+  color: #862812;
+}
+.badge-outline-SAT {
+  background: unset;
+  border: 1px solid #33a49f;
+  color: #33a49f;
+}
+
+.badge-NFE {
+  background: #f89212;
+  border: 1px solid #f89212;
+  color: #ffffff;
+}
+.badge-NFSE {
+  background: #2075a8;
+  border: 1px solid #2075a8;
+  color: #ffffff;
+}
+.badge-CTE {
+  background: #c80907;
+  border: 1px solid #c80907;
+  color: #ffffff;
+}
+.badge-CTEOS {
+  border: 1px solid #862812;
+  background: #862812;
+  color: #ffffff;
+}
+.badge-SAT {
+  background: #33a49f;
+  border: 1px solid #33a49f;
+  color: #ffffff;
+}
+
+.hidden_validation {
+  width: 0px;
+  max-width: 0px;
+  height: 0px;
+  max-height: 0px;
+  opacity: 0;
+  border: 0px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: contents;
+}
+
+body {
+  padding-right: 0px !important;
+}
+
+.btn-link {
+  cursor: pointer;
+}
+
+.simple-dropzone {
+  flex: 1 1;
+  min-height: 45px !important;
+  max-height: 45px !important;
+
+  .dz-image-preview {
+    height: 25px;
+    width: 100%;
+    margin: 0;
+  }
+
+  .dz-preview.dz-image-preview,
+  .dz-preview.dz-file-preview {
+    height: 25px;
+    width: 100%;
+    margin: 0;
+    border: 0 !important;
+  }
+
+  .dz-details {
+    display: flex !important;
+    padding: 7px !important;
+    border: 0;
+    line-height: 100% !important;
+  }
+
+  .dz-default.dz-message {
+    top: 7px !important;
+    span {
+      top: 6px !important;
+    }
+  }
+}
+
+.pageTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @include respond-below(sm) {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
