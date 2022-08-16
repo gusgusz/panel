@@ -61,8 +61,6 @@ typings/
 # next.js build output
 .next
 
-build/
-
 .history
 .DS_STORE
 .DS_Store
