@@ -33,6 +33,10 @@ const Providers = () => {
   const feedbackContext = React.useContext(FeedbackContext);
 
   const [items, setItems] = React.useState([]);
+  const [currentCoins, setCurrentCoins] = React.useState(0);
+  const [descriptionCoins, setDescriptionCoins] = React.useState("");
+  const [showModalCoins, setShowModalCoins] = React.useState(false);
+  const [provider, setProvider] = React.useState({});
 
   const loadData = (showLoad = true) => {
     try {
@@ -60,6 +64,23 @@ const Providers = () => {
     }
   };
 
+  const handleSaveCoins = event => {
+    if (event) event.preventDefault();
+
+    feedbackContext.useLoading(true, "Atualizando saldo em moedas do prestador...");
+    api
+      .put(`/providers/${provider.id}/coins`, { coins_balance: currentCoins, description: descriptionCoins })
+      .then(response => {
+        feedbackContext.useSuccess(true, "Saldo atualizado com sucesso!");
+        loadData(false);
+        setShowModalCoins(false);
+      })
+      .catch(error => {
+        console.log("erro");
+        feedbackContext.useError(true, "Oops! Não foi possível atualizar o saldo em moedas.");
+      });
+  };
+
   const refuse = id => {
     try {
       feedbackContext.useLoading(true, "Recusando prestador...");
@@ -71,6 +92,13 @@ const Providers = () => {
       console.log("erro");
       feedbackContext.useLoading(false);
     }
+  };
+
+  const loadCoins = item => {
+    setCurrentCoins(item.coins_balance);
+    setDescriptionCoins("");
+    setShowModalCoins(true);
+    setProvider(item);
   };
 
   const getStatus = status => {
@@ -134,7 +162,7 @@ const Providers = () => {
                               <Td className="text-center">{item.email ?? "-"}</Td>
                               <Td className="text-center">{item.cpf ?? "-"}</Td>
                               <Td className="text-center">{moment(item.birth_date).utc(false).format("DD/MM/YYYY")}</Td>
-                              <Td className="text-center font-weight-bold">{maskIntBeautify(item.coins_balance, true)}</Td>
+                              <Td className="text-center font-weight-bold">{maskIntBeautify(item.coins_balance)}</Td>
                               <Td className="text-center">{item.city_name}</Td>
                               <Td className="text-center">{moment(item.last_refresh).utc(false).format("DD/MM/YYYY HH:mm")}</Td>
                               <Td style={{ textAlign: "center" }}>
@@ -149,6 +177,19 @@ const Providers = () => {
                                   justifyContent: "right",
                                 }}>
                                 <ButtonGroup size="xs">
+                                  {renderButtonsPermission(
+                                    "PROVIDERS",
+                                    "COINS_BALANCE",
+                                    <>
+                                      {item.status === "ACCEPTED" ? (
+                                        <Button id={`btn2-coins-${item.id}`} color="dark" onClick={() => loadCoins(item)}>
+                                          <div className="iconsminds-coins"> Moedas</div>
+                                          <TooltipItem id={`btn2-coins-${item.id}`} text={"Editar Saldo de moedas"} />
+                                        </Button>
+                                      ) : null}
+                                    </>,
+                                  )}
+
                                   {renderButtonsPermission(
                                     "PROVIDERS",
                                     "APPROVAL",
@@ -203,6 +244,63 @@ const Providers = () => {
           </Row>
         </Colxx>
       </Row>
+
+      <Modal
+        // wrapClassName="modal-right"
+        size="md"
+        isOpen={showModalCoins}
+        toggle={() => setShowModalCoins(false)}>
+        <ModalHeader>
+          Saldo em moedas de <b>{provider?.name}</b>
+        </ModalHeader>
+        <ModalBody>
+          <form onSubmit={handleSaveCoins} action="#">
+            <Row>
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="descriptionCoins">
+                    * Descrição
+                  </Label>
+                  <CustomInput
+                    required
+                    className="form-control"
+                    type="text"
+                    id="descriptionCoins"
+                    value={descriptionCoins}
+                    onChange={e => setDescriptionCoins(e.target.value)}
+                  />
+                </FormGroup>
+              </Colxx>
+
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="currentCoins">
+                    * Saldo
+                  </Label>
+                  <CustomInput
+                    required
+                    className="form-control"
+                    type="number"
+                    id="currentCoins"
+                    value={currentCoins}
+                    onChange={e => setCurrentCoins(e.target.value)}
+                  />
+                </FormGroup>
+              </Colxx>
+            </Row>
+
+            <button type="submit" style={{ display: "none" }} id="btnSubmitCoins" />
+          </form>
+        </ModalBody>
+        <ModalFooter style={{ justifyContent: "end" }}>
+          <button type="button" className="btn btn-light" onClick={() => setShowModalCoins(false)}>
+            Fechar
+          </button>
+          <button type="submit" className="btn btn-success btn-shadow btn-lg " onClick={() => document.querySelector("#btnSubmitCoins").click()}>
+            Salvar
+          </button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };

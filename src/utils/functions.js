@@ -52,6 +52,8 @@ export const maskCpfCnpj = (target, type = "cpf") => {
 export const maskIntBeautify = (int: any, includeZero = false) => {
   if (!int) int = 0;
 
+  const isNegative = int < 0;
+
   if (includeZero) int = parseFloat(int).toFixed(2);
 
   int = int.toString().replace(/\D/g, "");
@@ -73,7 +75,8 @@ export const maskIntBeautify = (int: any, includeZero = false) => {
   else if (11 == len) int = int.replace(/(\d{2})(\d{3})(\d{3})(\d{3})$/, "$1.$2.$3.$4");
   else if (12 == len) int = int.replace(/(\d{3})(\d{3})(\d{3})(\d{3})$/, "$1.$2.$3.$4");
   else if (len > 12) int = int.replace(/(\d)(\d{3})(\d{3})(\d{3})(\d{3})$/, "$1.$2.$3.$4.$5");
-  return int;
+
+  return `${isNegative ? "- " : ""}${int}`;
 };
 
 export const maskPhoneOrEmail = (param: any) => {
