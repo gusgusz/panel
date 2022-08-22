@@ -44,6 +44,7 @@ const ViewUser = React.lazy(() => import("./pages/user"));
  */
 const ViewError = React.lazy(() => import("./pages/error"));
 const ViewUnauthorized = React.lazy(() => import("./pages/unauthorized"));
+const ViewPolicy = React.lazy(() => import("./pages/policy"));
 
 import { SettingsProvider } from "context/settings";
 
@@ -128,6 +129,7 @@ const App = ({ locale }) => {
                 <Switch>
                   <Route path="/app" component={ViewApp} />
                   <Route path="/usuario" render={props => <ViewUser {...props} />} />
+                  <Route path="/politica-de-privacidade" render={props => <ViewPolicy {...props} />} />
 
                   <Route path="/error" exact render={props => <ViewError {...props} />} />
                   <Route path="/unauthorized" exact render={props => <ViewUnauthorized {...props} />} />
