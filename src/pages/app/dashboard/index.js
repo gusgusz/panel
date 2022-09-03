@@ -198,7 +198,7 @@ const MySales = ({}) => {
                               <Td className="text-center">{moment(item.created_at).utc().subtract(4, "hours").format("DD/MM/YYYY HH:mm")}</Td>
 
                               <Td className="text-center font-weight-bold">{maskIntBeautify(item.coins)}</Td>
-                              <Td className="text-center font-weight-bold">{maskIntBeautify(item.serivces)}</Td>
+                              <Td className="text-center font-weight-bold">{maskIntBeautify(item.services)}</Td>
                               <Td className="text-center font-weight-bold">{item.price ? <>R$ {maskRealBeautify(item.price, true)}</> : "-"}</Td>
                               <Td className="text-center">
                                 <Badge pill color={getStatus(item.status).color}>
