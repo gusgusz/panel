@@ -50,6 +50,7 @@ const Services = () => {
     if (status === "SENT") return { label: "Aguardando Prestador", color: "warning" };
     if (status === "CANCELED") return { label: "Cancelado", color: "danger" };
     if (status === "ACCEPTED") return { label: "Aceito", color: "success" };
+    else return { label: "Aceito e Finalizado", color: "success" };
   };
 
   React.useEffect(() => {
