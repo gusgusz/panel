@@ -42,7 +42,7 @@ const App = ({ match }) => {
             {permissionByModule("JOBS") ? <Route path={`${match.url}/vagas`} render={props => <Jobs {...props} />} /> : null}
             {permissionByModule("DASHBOARD") ? <Route path={`${match.url}/dashboard`} render={props => <Dashboard {...props} />} /> : null}
             {permissionByModule("JOBS") ? <Route path={`${match.url}/dashboard`} render={props => <Jobs {...props} />} /> : null}
-            {permissionByModule("Franchises") ? <Route path={`${match.url}/a/franquias`} render={props => <Franchises {...props} />} /> : null}
+            {permissionByModule("FRANCHISES") ? <Route path={`${match.url}/a/franquias`} render={props => <Franchises {...props} />} /> : null}
 
             <Redirect to="/unauthorized" />
           </Switch>
