@@ -24,22 +24,25 @@ import { maskRealBeautify, maskIntBeautify } from "utils/functions";
 import ComponentApplicationMenu from "./applicationMenu";
 
 import { FeedbackContext } from "App";
+import Pagination from "components/Pagination";
 
+const PER_PAGE = 20;
 const MySales = ({}) => {
   const feedbackContext = React.useContext(FeedbackContext);
 
+  const [page, setPage] = React.useState(0);
   const [cards, setCards] = React.useState({});
   const [more, setMore] = React.useState({});
   const [rows, setRows] = React.useState([]);
 
   const [loading, setLoading] = React.useState(false);
 
-  const loadSales = (showLoad = true) => {
-    showLoad ? feedbackContext.useLoading(true, "Por favor aguarde! Carregando relatório...") : null;
+  const loadSales = (params = {}) => {
+    feedbackContext.useLoading(true, "Por favor aguarde! Carregando relatório...");
     setLoading(true);
     api
       .get("/my-finances", {
-        params: {},
+        params,
       })
       .then(response => {
         setCards(response.data.cards);
@@ -172,6 +175,7 @@ const MySales = ({}) => {
                         <Thead>
                           <Tr>
                             <Th>#</Th>
+                            <Th>Franquia</Th>
                             <Th>Prestador</Th>
                             <Th>Descricão</Th>
                             <Th>Cliente</Th>
@@ -183,9 +187,12 @@ const MySales = ({}) => {
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {rows.map(item => (
+                          {rows?.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE)?.map(item => (
                             <Tr className="mb-1" key={`finance-${item.id}`}>
                               <Td>{item.id}</Td>
+                              <Td>
+                                <strong>{item?.franchise ?? "-"}</strong>
+                              </Td>
                               <Td>
                                 <strong>{item?.provider_name ?? "-"}</strong>
                               </Td>
@@ -216,24 +223,20 @@ const MySales = ({}) => {
             </Colxx>
           </Row>
         </Colxx>
+        {rows.length > PER_PAGE ? (
+          <Pagination
+            className="mt-3 mb-0"
+            size="sm"
+            currentPage={page + 1}
+            totalPage={Math.ceil(rows?.length / PER_PAGE)}
+            onChangePage={i => {
+              setPage(i - 1);
+            }}
+          />
+        ) : null}
       </Row>
-      {/* <ComponentApplicationMenu
-        loading={loading}
-        term={term}
-        setTerm={setTerm}
-        status={status}
-        setStatus={setStatus}
-        onSearch={loadSales}
-        date_ini={date_ini}
-        setDate_ini={setDate_ini}
-        date_end={date_end}
-        setDate_end={setDate_end}
-        membership={membership}
-        setMembership={setMembership}
-        itemsToExport={rows}
-        seller={seller}
-        setSeller={setSeller}
-      /> */}
+
+      <ComponentApplicationMenu onSearch={loadSales} />
     </>
   );
 };

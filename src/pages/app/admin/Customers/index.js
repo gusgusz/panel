@@ -19,6 +19,7 @@ import Select from "react-select";
 import Switch from "rc-switch";
 
 import TooltipItem from "components/TooltipItem";
+import ComponentApplicationMenu from "./applicationMenu";
 
 import api from "services/api";
 import { getCurrentUser, renderButtonsPermission } from "helpers/Utils";
@@ -29,15 +30,19 @@ import error_alert from "utils/alerts/error";
 import { maskRealBeautify, toFloat } from "utils/functions";
 import moment from "moment";
 
+import Pagination from "components/Pagination";
+
+const PER_PAGE = 20;
 const Services = () => {
   const feedbackContext = React.useContext(FeedbackContext);
 
   const [items, setItems] = React.useState([]);
+  const [page, setPage] = React.useState(0);
 
-  const loadData = (showLoad = true) => {
+  const loadData = (params = {}) => {
     try {
-      showLoad ? feedbackContext.useLoading(true, "Carregando...") : null;
-      api.get("/customers").then(response => {
+      feedbackContext.useLoading(true, "Carregando...");
+      api.get("/customers", { params }).then(response => {
         setItems(response.data);
         feedbackContext.useLoading(false);
       });
@@ -74,24 +79,28 @@ const Services = () => {
                         <Thead>
                           <Tr>
                             <Th style={{ width: 25 }}>#</Th>
-                            <Th style={{ width: 150 }}>Cliente</Th>
+                            <Th style={{ textAlign: "center", width: 150 }}>Franquia</Th>
+                            <Th style={{ width: 200 }}>Prestador</Th>
 
                             <Th style={{ textAlign: "center" }}>Telefone</Th>
-                            <Th style={{ textAlign: "center" }}>E-mail</Th>
+                            {/* <Th style={{ textAlign: "center" }}>E-mail</Th> */}
                             <Th style={{ textAlign: "center" }}>UID</Th>
                             <Th style={{ textAlign: "center" }}>Último login</Th>
                           </Tr>
                         </Thead>
                         <Tbody>
-                          {items.map(item => (
+                          {items?.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE)?.map(item => (
                             <Tr className="mb-1" id={`services-${item.id}`}>
                               <Td>{item.id}</Td>
-                              <Td>{item.name}</Td>
+                              <Td style={{ textAlign: "center" }}>
+                                <b>{item.franchise?.name ?? "-"}</b>
+                              </Td>
+                              <Td>{item.name ?? "-"}</Td>
 
                               <Td className="text-center">{item.phone}</Td>
-                              <Td className="text-center">{item.email ?? "-"}</Td>
+                              {/* <Td className="text-center">{item.email ?? "-"}</Td> */}
                               <Td className="text-center">{item.uid ?? "-"}</Td>
-                              <Td className="text-center">{moment(item.last_refresh).utc(false).format("DD/MM/YYYY HH:mm")}</Td>
+                              <Td className="text-center">{item.last_refresh ? moment(item.last_refresh).utc(false).format("DD/MM/YYYY HH:mm") : "Nunca"}</Td>
                             </Tr>
                           ))}
                         </Tbody>
@@ -101,6 +110,18 @@ const Services = () => {
                 </CardBody>
               </Card>
             </Colxx>
+            {items.length > PER_PAGE ? (
+              <Pagination
+                className="mt-3 mb-0"
+                size="sm"
+                currentPage={page + 1}
+                totalPage={Math.ceil(items?.length / PER_PAGE)}
+                onChangePage={i => {
+                  setPage(i - 1);
+                }}
+              />
+            ) : null}
+
             <Colxx xss="12" className="text-center  ">
               {items.length === 0 ? (
                 <small>
@@ -111,6 +132,8 @@ const Services = () => {
           </Row>
         </Colxx>
       </Row>
+
+      <ComponentApplicationMenu onSearch={loadData} />
     </>
   );
 };

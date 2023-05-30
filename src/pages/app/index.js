@@ -17,6 +17,7 @@ const Plans = React.lazy(() => import("./admin/Plans"));
 const Services = React.lazy(() => import("./admin/Services"));
 const Customers = React.lazy(() => import("./admin/Customers"));
 const Providers = React.lazy(() => import("./admin/Providers"));
+const Franchises = React.lazy(() => import("./admin/Franchises"));
 const Jobs = React.lazy(() => import("./admin/Jobs"));
 const Dashboard = React.lazy(() => import("./dashboard"));
 
@@ -41,6 +42,7 @@ const App = ({ match }) => {
             {permissionByModule("JOBS") ? <Route path={`${match.url}/vagas`} render={props => <Jobs {...props} />} /> : null}
             {permissionByModule("DASHBOARD") ? <Route path={`${match.url}/dashboard`} render={props => <Dashboard {...props} />} /> : null}
             {permissionByModule("JOBS") ? <Route path={`${match.url}/dashboard`} render={props => <Jobs {...props} />} /> : null}
+            {permissionByModule("Franchises") ? <Route path={`${match.url}/a/franquias`} render={props => <Franchises {...props} />} /> : null}
 
             <Redirect to="/unauthorized" />
           </Switch>

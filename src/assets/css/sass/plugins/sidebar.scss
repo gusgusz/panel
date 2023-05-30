@@ -60,6 +60,7 @@
         color: $primary-color;
         transition: color $menu-collapse-time;
         transition: background $menu-collapse-time;
+        text-align: center;
 
         &:hover,
         &:focus {

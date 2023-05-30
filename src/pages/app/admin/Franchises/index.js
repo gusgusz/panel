@@ -9,6 +9,7 @@ import React from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
 
 import { Row, Card, CardBody } from "reactstrap";
+import AsyncSelect from "react-select/async";
 
 import { Badge, FormGroup } from "reactstrap";
 import { Label, CustomInput, Button, ButtonGroup } from "reactstrap";
@@ -26,18 +27,20 @@ import { getCurrentUser, renderButtonsPermission } from "helpers/Utils";
 import { FeedbackContext } from "App";
 import DropzoneExample from "components/Dropzone";
 import error_alert from "utils/alerts/error";
+import { maskPhone } from "utils/functions";
 
-const Categories = () => {
+const Franchises = () => {
   const feedbackContext = React.useContext(FeedbackContext);
 
   const [id, setId] = React.useState("");
   const [name, setName] = React.useState("");
-  const [description, setDescription] = React.useState("");
+  const [responsible, setResponsible] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [city, setCity] = React.useState();
 
   const [is_actived, setIs_actived] = React.useState(true);
-  const [file, setFile] = React.useState("");
-
-  const [fileUploading, setFileUploading] = React.useState(false);
 
   const [showModalAddEdt, setShowModalAddEdt] = React.useState(false);
   const [items, setItems] = React.useState([]);
@@ -45,7 +48,7 @@ const Categories = () => {
   const loadData = (showLoad = true) => {
     try {
       showLoad ? feedbackContext.useLoading(true, "Carregando...") : null;
-      api.get("/categories").then(response => {
+      api.get("/franchises").then(response => {
         setItems(response.data);
         feedbackContext.useLoading(false);
       });
@@ -58,27 +61,25 @@ const Categories = () => {
   const handleSave = async event => {
     if (event) event.preventDefault();
 
-    if (file.length <= 0 && !id) {
-      error_alert("Informe uma imagem", "Campo obrigatório!");
-      return;
-    }
-
     feedbackContext.useLoading(true, "Salvando registro...");
 
     try {
       const payload = {
         name,
-        description,
+        responsible,
+        phone,
+        email,
+        address,
+        city_name: city.label,
+        city_id: city.value,
+        state_name: city.more.state.initial,
+        state_id: city.more.state.id,
+
         is_actived,
       };
 
-      if (file.length > 0) {
-        let fileParse = JSON.parse(file[0].xhr.response);
-        payload.image_path_metadata = { base64: fileParse?.files?.file };
-      }
-
-      if (id) await api.put(`/categories/${id}`, payload);
-      else await api.post(`/categories`, payload);
+      if (id) await api.put(`/franchises/${id}`, payload);
+      else await api.post(`/franchises`, payload);
 
       feedbackContext.useSuccess(true, "Registro salvo com sucesso");
       loadData(false);
@@ -93,7 +94,11 @@ const Categories = () => {
     setId(item.id);
 
     setName(item.name);
-    setDescription(item.description);
+    setResponsible(item.responsible);
+    setPhone(item.phone);
+    setEmail(item.email);
+    setAddress(item.address);
+    setCity({ value: item.city_id, label: item.city_name, more: { state: { id: item.state_id, initial: item.state_name } } });
 
     setIs_actived(item.is_actived);
 
@@ -101,10 +106,13 @@ const Categories = () => {
   };
 
   const handleClear = () => {
-    setFile([]);
     setId("");
     setName("");
-    setDescription("");
+    setResponsible("");
+    setPhone("");
+    setEmail("");
+    setAddress("");
+    setCity();
 
     setIs_actived(true);
   };
@@ -117,7 +125,7 @@ const Categories = () => {
   const handleDisableEnable = (id, status) => {
     feedbackContext.useConfirmAlert(true, `Tem certeza que deseja ${status ? "desativar" : "ativar"} esse registro?`, async () => {
       feedbackContext.useLoading(true, "Atualizando registro...");
-      await api.put(`/categories/${id}`, { is_actived: !status });
+      await api.put(`/franchises/${id}`, { is_actived: !status });
       feedbackContext.useSuccess(true, "Registro atualizado com sucesso");
       loadData(false);
     });
@@ -126,10 +134,47 @@ const Categories = () => {
   const handleRemove = id => {
     feedbackContext.useConfirmAlert(true, `Todos os registros relacionados serão removidos! Tem certeza que deseja continuar?`, async () => {
       feedbackContext.useLoading(true, "Excluindo registro...");
-      await api.delete(`/categories/${id}`);
+      await api.delete(`/franchises/${id}`);
       feedbackContext.useSuccess(true, "Registro deletado com sucesso");
       loadData(false);
     });
+  };
+
+  const filterCity = async (inputValue: string) => {
+    if (inputValue != "") {
+      if (inputValue.length >= 2) {
+        return await api
+          .get(`/cities?terms=${inputValue}`)
+          .then(response => {
+            return response.data.map(i => ({ value: i.id, label: `${i.name} (${i.state.initial})`, more: i }));
+          })
+          .catch(error => []);
+      } else return [];
+    }
+  };
+
+  const loadOptionsCity = async (inputValue: string, callback: (options: any) => void) => {
+    callback(await filterCity(inputValue));
+  };
+
+  const handleInputChange = value => {
+    return value;
+  };
+
+  const loadCity = async (city, uf) => {
+    if (city && uf) {
+      try {
+        const { data } = await api.get(`/city?name=${city}&uf=${uf}`);
+
+        return data;
+      } catch (error) {
+        console.log(error);
+
+        return {};
+      }
+    } else {
+      return {};
+    }
   };
 
   React.useEffect(() => {
@@ -146,9 +191,9 @@ const Categories = () => {
               flexDirection: "row",
               justifyContent: "space-between",
             }}>
-            Categorias
+            Franquias
             {renderButtonsPermission(
-              "CATEGORIES",
+              "FRANCHISES",
               "STORE",
               <>
                 <span style={{}} className="d-flex">
@@ -169,12 +214,10 @@ const Categories = () => {
                       <Table>
                         <Thead>
                           <Tr>
-                            <Th style={{ textAlign: "center", width: 150 }}>Imagem</Th>
-                            <Th style={{ textAlign: "center", width: 150 }}>Franquia</Th>
                             <Th style={{ width: 150 }}>Nome</Th>
-
-                            <Th style={{ textAlign: "left" }}>Descrição</Th>
-
+                            <Th>Responsável</Th>
+                            <Th>Cidade</Th>
+                            <Th>Telefone</Th>
                             <Th style={{ textAlign: "center" }}>Status</Th>
                             <Th
                               className="d-flex"
@@ -188,17 +231,8 @@ const Categories = () => {
                         <Tbody>
                           {items.map(item => (
                             <Tr className="mb-1" id={`categories-${item.id}`}>
-                              <Td className="text-center">
-                                <a href={item.image_path} target={"_blank"}>
-                                  <img src={item.image_path} style={{ width: 80, borderRadius: "100%" }} />
-                                </a>
-                              </Td>
-                              <Td style={{ textAlign: "center" }}>
-                                <b>{item.franchise?.name ?? "-"}</b>
-                              </Td>
-
                               {renderButtonsPermission(
-                                "CATEGORIES",
+                                "FRANCHISES",
                                 "UPDATE",
                                 <>
                                   <Td onClick={() => handleEdit(item)} className="btn-link">
@@ -209,14 +243,36 @@ const Categories = () => {
                               )}
 
                               {renderButtonsPermission(
-                                "CATEGORIES",
+                                "FRANCHISES",
                                 "UPDATE",
                                 <>
                                   <Td onClick={() => handleEdit(item)} className="btn-link">
-                                    {item.description}
+                                    {item.responsible}
                                   </Td>
                                 </>,
-                                <Td>{item.description}</Td>,
+                                <Td>{item.responsible}</Td>,
+                              )}
+
+                              {renderButtonsPermission(
+                                "FRANCHISES",
+                                "UPDATE",
+                                <>
+                                  <Td onClick={() => handleEdit(item)} className="btn-link">
+                                    {item.city_name}
+                                  </Td>
+                                </>,
+                                <Td>{item.city_name}</Td>,
+                              )}
+
+                              {renderButtonsPermission(
+                                "FRANCHISES",
+                                "UPDATE",
+                                <>
+                                  <Td onClick={() => handleEdit(item)} className="btn-link">
+                                    {item.phone}
+                                  </Td>
+                                </>,
+                                <Td>{item.phone}</Td>,
                               )}
 
                               <Td style={{ textAlign: "center" }}>
@@ -229,11 +285,10 @@ const Categories = () => {
                                 style={{
                                   alignItems: "center",
                                   justifyContent: "right",
-                                  minHeight: "100px",
                                 }}>
                                 <ButtonGroup size="xs">
                                   {renderButtonsPermission(
-                                    "CATEGORIES",
+                                    "FRANCHISES",
                                     "DISABLE-ENABLE",
                                     <>
                                       <Button id={`btn2-${item.id}`} color="warning" onClick={() => handleDisableEnable(item.id, item.is_actived)}>
@@ -243,7 +298,7 @@ const Categories = () => {
                                     </>,
                                   )}
                                   {renderButtonsPermission(
-                                    "CATEGORIES",
+                                    "FRANCHISES",
                                     "DESTROY",
                                     <>
                                       <Button id={`btn3-${item.id}`} color="danger" onClick={() => handleRemove(item.id)}>
@@ -282,7 +337,7 @@ const Categories = () => {
         style={{ minWidth: "30vw", width: "100%", minHeight: "100vh" }}
         // toggle={() => setShowModalAddEdt(false)}
       >
-        <ModalHeader>Categoria</ModalHeader>
+        <ModalHeader>Franquia</ModalHeader>
         <ModalBody>
           <form onSubmit={handleSave} action="#">
             <Row>
@@ -294,35 +349,83 @@ const Categories = () => {
                   <CustomInput required className="form-control" type="text" id="name" value={name} onChange={e => setName(e.target.value)} />
                 </FormGroup>
               </Colxx>
-
+            </Row>
+            <Row>
               <Colxx sm="12" lg="12" xs="12">
                 <FormGroup>
-                  <Label className="font-weight-bold" for="locale">
-                    * Descrição
+                  <Label className="font-weight-bold" for="responsible">
+                    * Responsável
                   </Label>
                   <CustomInput
                     required
                     className="form-control"
                     type="text"
-                    id="description"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
+                    id="responsible"
+                    value={responsible}
+                    onChange={e => setResponsible(e.target.value)}
                   />
                 </FormGroup>
               </Colxx>
             </Row>
 
             <Row>
-              <Colxx sm="12">
-                <Label for="file" className="font-weight-bold">
-                  Imagem/Logo
-                </Label>
-                <DropzoneExample
-                  files={file}
-                  setFiles={setFile}
-                  setFileUploading={setFileUploading}
-                  dropzoneConfig={{ maxFiles: 1, acceptedFiles: "image/*" }}
-                />
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="phone">
+                    * Telefone
+                  </Label>
+                  <CustomInput required className="form-control" type="text" id="phone" value={phone} onChange={e => setPhone(maskPhone(e.target.value))} />
+                </FormGroup>
+              </Colxx>
+            </Row>
+
+            <Row>
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="email">
+                    * E-mail
+                  </Label>
+                  <CustomInput required className="form-control" type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} />
+                </FormGroup>
+              </Colxx>
+            </Row>
+
+            <Row>
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="address">
+                    * Endereço
+                  </Label>
+                  <CustomInput required className="form-control" type="text" id="address" value={address} onChange={e => setAddress(e.target.value)} />
+                </FormGroup>
+              </Colxx>
+            </Row>
+            <Row>
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="city">
+                    * Cidade
+                  </Label>
+                  <AsyncSelect
+                    cacheOptions={true}
+                    loadOptions={loadOptionsCity}
+                    defaultOptions
+                    onInputChange={handleInputChange}
+                    name={"city_id"}
+                    type="select"
+                    isClearable
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    noOptionsMessage={() => "Nenhum registro encontrado"}
+                    loadingMessage={() => "Pesquisando..."}
+                    defaultValue={city}
+                    value={city}
+                    placeholder="Digite para pesquisar..."
+                    onChange={e => {
+                      setCity(e);
+                    }}
+                  />{" "}
+                </FormGroup>
               </Colxx>
             </Row>
             <Row>
@@ -339,14 +442,10 @@ const Categories = () => {
           </form>
         </ModalBody>
         <ModalFooter style={{ justifyContent: "end" }}>
-          <button type="button" className="btn btn-light" onClick={() => setShowModalAddEdt(false)} disabled={fileUploading}>
+          <button type="button" className="btn btn-light" onClick={() => setShowModalAddEdt(false)}>
             Fechar
           </button>
-          <button
-            type="submit"
-            className="btn btn-success btn-shadow btn-lg "
-            onClick={() => document.querySelector("#btnSubmitCategories").click()}
-            disabled={fileUploading}>
+          <button type="submit" className="btn btn-success btn-shadow btn-lg " onClick={() => document.querySelector("#btnSubmitCategories").click()}>
             Salvar
           </button>
         </ModalFooter>
@@ -354,4 +453,5 @@ const Categories = () => {
     </>
   );
 };
-export default React.memo(Categories);
+
+export default React.memo(Franchises);

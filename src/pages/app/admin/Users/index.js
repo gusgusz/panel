@@ -36,12 +36,14 @@ const Users = ({ match }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [profile_id, setProfile_id] = React.useState("");
+  const [franchise_id, setFranchise_id] = React.useState("");
   const [force_password_change, setForce_password_change] = React.useState(true);
   const [is_actived, setIs_actived] = React.useState(false);
 
   const [showModalAddEdt, setShowModalAddEdt] = React.useState(false);
   const [items, setItems] = React.useState([]);
   const [profiles, setProfiles] = React.useState([]);
+  const [franchises, setFranchises] = React.useState([]);
 
   const loadData = (showLoad = true) => {
     try {
@@ -62,6 +64,12 @@ const Users = ({ match }) => {
     });
   };
 
+  const loadFranchises = () => {
+    api.get("/franchises?is_actived=true").then(response => {
+      setFranchises(response.data);
+    });
+  };
+
   const handleSave = async event => {
     if (event) event.preventDefault();
 
@@ -78,6 +86,7 @@ const Users = ({ match }) => {
         password,
 
         profile_id: profile_id?.value ?? "",
+        franchise_id: franchise_id?.value ?? "",
         force_password_change,
         is_actived,
       };
@@ -100,6 +109,7 @@ const Users = ({ match }) => {
     setEmail(item.email);
     setPassword("");
     setProfile_id({ value: item.profile.id, label: item.profile.name });
+    setFranchise_id(item.franchise ? { value: item.franchise.id, label: item.franchise.name } : undefined);
 
     setForce_password_change(false);
     setIs_actived(item.is_actived);
@@ -113,6 +123,7 @@ const Users = ({ match }) => {
     setEmail("");
     setPassword("");
     setProfile_id();
+    setFranchise_id();
     setForce_password_change(true);
     setIs_actived(true);
   };
@@ -143,6 +154,7 @@ const Users = ({ match }) => {
   React.useEffect(() => {
     loadData();
     loadProfiles();
+    loadFranchises();
   }, []);
 
   return (
@@ -187,11 +199,12 @@ const Users = ({ match }) => {
                             <Th>Nome</Th>
                             <Th>Usuário</Th>
                             <Th className="text-center">Perfil</Th>
-
+                            <Th className="highlighter" style={{ textAlign: "center" }}>
+                              Franquia
+                            </Th>
                             <Th className="highlighter" style={{ textAlign: "center" }}>
                               Status
                             </Th>
-
                             <Th
                               className="d-flex"
                               style={{
@@ -216,6 +229,12 @@ const Users = ({ match }) => {
 
                               <Td>{item.email}</Td>
                               <Td className="text-center">{item?.profile?.name ?? "-"}</Td>
+
+                              <Td style={{ textAlign: "center" }}>
+                                <Badge pill className="highlighter" color={"info"}>
+                                  {item?.franchise?.name ?? "-"}
+                                </Badge>
+                              </Td>
 
                               <Td style={{ textAlign: "center" }}>
                                 <Badge pill className="highlighter" color={item.is_actived ? "success" : "warning"}>
@@ -286,6 +305,26 @@ const Users = ({ match }) => {
 
         <ModalBody>
           <form onSubmit={handleSave} action="#">
+            <Row>
+              <Colxx sm="12">
+                <FormGroup>
+                  <Label for="franchise_id" className="font-weight-bold">
+                    * Franquia
+                  </Label>
+                  <Select
+                    isClearable
+                    id="franchise_id"
+                    type="select"
+                    placeholder="Selecione..."
+                    options={franchises.map(i => ({ value: i.id, label: i.name }))}
+                    defaultValue={franchise_id}
+                    value={franchise_id}
+                    onChange={e => setFranchise_id(e)}
+                  />
+                </FormGroup>
+              </Colxx>
+            </Row>
+
             <Row>
               <Colxx sm="12">
                 <FormGroup>

@@ -35,13 +35,13 @@ const data = [
     to: `/app/servicos`,
     key: "SERVICES",
   },
-  {
-    id: "jobs",
-    icon: "iconsminds-megaphone",
-    label: "Vagas",
-    to: `/app/vagas`,
-    key: "JOBS",
-  },
+  // {
+  //   id: "jobs",
+  //   icon: "iconsminds-megaphone",
+  //   label: "Vagas",
+  //   to: `/app/vagas`,
+  //   key: "JOBS",
+  // },
   {
     id: "administrator",
     icon: "iconsminds-security-settings",
@@ -59,6 +59,12 @@ const data = [
         label: "Parâmetros",
         to: `/app/a/parametros`,
         key: "PARAMETERS",
+      },
+      {
+        icon: "iconsminds-affiliate",
+        label: "Franquias",
+        to: `/app/a/franquias`,
+        key: "FRANCHISES",
       },
       {
         icon: "iconsminds-male-female",
