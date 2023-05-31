@@ -67,7 +67,7 @@ const MySales = ({}) => {
       return { label: "AGUARDANDO", color: "warning" };
     } else if (status === "CANCELED") {
       return { label: "CANCELADO", color: "danger" };
-    }
+    } else return { label: "CANCELADO", color: "danger" };
   };
 
   React.useEffect(() => {

@@ -51,6 +51,7 @@ const Providers = () => {
   const [phone, setPhone] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [franchise_id, setFranchise_id] = React.useState("");
+  const [skills, setSkills] = React.useState([]);
 
   const [showModalAddEdt, setShowModalAddEdt] = React.useState(false);
 
@@ -60,10 +61,17 @@ const Providers = () => {
   const [provider, setProvider] = React.useState({});
 
   const [franchises, setFranchises] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
 
   const loadFranchises = () => {
     api.get("/franchises").then(response => {
       setFranchises(response.data);
+    });
+  };
+
+  const loadCategories = () => {
+    api.get("/categories").then(response => {
+      setCategories(response.data);
     });
   };
 
@@ -140,6 +148,7 @@ const Providers = () => {
         phone,
         franchise_id: franchise_id ? franchise_id.value : undefined,
         status: "ACCEPTED",
+        skills: skills.map(i => i.value),
       };
 
       if (id) await api.put(`/providers/${id}`, payload);
@@ -205,6 +214,7 @@ const Providers = () => {
   React.useEffect(() => {
     loadData();
     loadFranchises();
+    loadCategories();
   }, []);
 
   return (
@@ -381,7 +391,6 @@ const Providers = () => {
           <form onSubmit={handleSave} action="#">
             <Row>
               <Colxx sm="12" lg="12" xs="12">
-                {" "}
                 <FormGroup>
                   <Label className="font-weight-bold" for="name">
                     Franquia
@@ -465,6 +474,27 @@ const Providers = () => {
                     Endereço
                   </Label>
                   <CustomInput className="form-control" type="text" id="address" value={address} onChange={e => setAddress(e.target.value)} />
+                </FormGroup>
+              </Colxx>
+
+              <Colxx sm="12" lg="12" xs="12">
+                <FormGroup>
+                  <Label className="font-weight-bold" for="skills">
+                    Habilidades
+                  </Label>
+                  <ReactSelect
+                    placeholder="Selecione"
+                    isClearable
+                    isMulti
+                    components={{ Input: CustomSelectInput }}
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    name="skills"
+                    value={skills}
+                    defaultValue={skills}
+                    onChange={row => setSkills(row)}
+                    options={categories.map(i => ({ value: i.id, label: i.name }))}
+                  />
                 </FormGroup>
               </Colxx>
             </Row>
