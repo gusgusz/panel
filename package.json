@@ -67,6 +67,7 @@
     "reactstrap": "^8.9.0",
     "redux": "^4.1.0",
     "redux-saga": "^1.1.3",
+    "resolve-url-loader": "^5.0.0",
     "sortablejs": "^1.13.0",
     "sweetalert": "^2.1.2",
     "video.js": "^7.12.3",
@@ -74,13 +75,11 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "npm -g install serve && serve -s build",
-    "serve": "serve -s build",
-    "dev": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "precommit": "lint-staged"
+    "serve": "serve -s build"
   },
   "husky": {
     "hooks": {
@@ -104,7 +103,9 @@
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.1",
-    "react-error-overlay": "6.0.10"
+    "react-error-overlay": "6.0.10",
+    "sass": "^1.92.1",
+    "sass-loader": "^16.0.5"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
